@@ -25,49 +25,77 @@ const Footer_01 = () => {
     setToast({ message: "", type: "success", isVisible: false });
 
     const formData = new FormData(e.currentTarget);
-    const data = {
-      name: formData.get("name"),
-      email: formData.get("email"),
-      message: formData.get("message"),
-    };
+    const name = formData.get("name") as string;
+    const email = formData.get("email") as string;
+    const message = formData.get("message") as string;
 
     const form = e.currentTarget;
 
+    const GOOGLE_SCRIPT_URL = process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL;
+
+    if (!GOOGLE_SCRIPT_URL) {
+      setToast({
+        message:
+          "Form submission service not configured. Please contact support.",
+        type: "error",
+        isVisible: true,
+      });
+      setIsSubmitting(false);
+      return;
+    }
+
+    const timestamp = new Date().toLocaleString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZoneName: "short",
+    });
+
+    const data = {
+      name: name,
+      email: email,
+      message: message,
+      timestamp: timestamp,
+    };
+
     try {
-      const response = await fetch("/api/contact", {
+      const scriptUrl = GOOGLE_SCRIPT_URL.endsWith("/exec")
+        ? GOOGLE_SCRIPT_URL
+        : `${GOOGLE_SCRIPT_URL.replace(/\/$/, "")}/exec`;
+
+      console.log("Submitting to Google Sheets:", scriptUrl);
+      console.log("Form data:", data);
+
+      await fetch(scriptUrl, {
         method: "POST",
+        mode: "no-cors",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
 
-      if (response.status === 200) {
-        setToast({
-          message: "Message sent successfully! We'll get back to you soon.",
-          type: "success",
-          isVisible: true,
-        });
+      console.log(
+        "Form submitted to Google Sheets (no-cors mode - response not readable)"
+      );
 
-        form.reset();
-      } else {
-        setToast({
-          message:
-            "Sorry, there was an error sending your message. Please try again.",
-          type: "error",
-          isVisible: true,
-        });
-
-        form.reset();
-      }
+      setToast({
+        message: "Message sent successfully! We'll get back to you soon.",
+        type: "success",
+        isVisible: true,
+      });
+      form.reset();
     } catch (error) {
+      console.error("Form submission error:", error);
       setToast({
         message:
           "Sorry, there was an error sending your message. Please try again.",
         type: "error",
         isVisible: true,
       });
-
       form.reset();
     } finally {
       setIsSubmitting(false);
