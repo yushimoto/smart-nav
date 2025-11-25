@@ -9,10 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "form-data": "^4.0.4",
     "fslightbox-react": "^1.7.6",
     "jos-animation": "^0.9.2",
-    "mailgun.js": "^11.1.0",
     "next": "14.1.0",
     "react": "^18",
     "react-dom": "^18",
