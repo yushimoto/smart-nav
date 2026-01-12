@@ -253,7 +253,7 @@ const Footer_01 = () => {
         <div className="h-[1px] w-full bg-[#DBD6CF]" />
         <div className="py-9 text-center">
           <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-            <p>© 2025 Smart Navigation LLC. All Rights Reserved.</p>
+            <p>© {new Date().getFullYear()} Smart Navigation LLC. All Rights Reserved.</p>
             <Link
               href="https://www.linkedin.com/company/smart-navigation"
               target="_blank"
