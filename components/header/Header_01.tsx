@@ -64,6 +64,13 @@ const Header_01 = (): React.JSX.Element => {
               Contact Us
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full"></span>
             </button>
+            <a 
+              href="https://app.smartnav.ai"
+              className='hidden lg:inline-block text-orange-500 font-semibold text-[16px] transition-all duration-300 ease-in-out hover:text-orange-400 hover:scale-105 relative group'
+            >
+              Sign In
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-orange-500 transition-all duration-300 group-hover:w-full"></span>
+            </a>
             <div className='block lg:hidden'>
               <button
                 onClick={() => setMobileMenu(true)}
