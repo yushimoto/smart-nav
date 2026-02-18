@@ -1,8 +1,7 @@
 "use client";
 import React from "react";
-import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import useSmoothScroll from "../hooks/useSmoothScroll";
 
 interface NavbarProps {
@@ -16,59 +15,20 @@ const Navbar = ({
   setMobileMenu,
   color,
 }: NavbarProps): React.JSX.Element => {
-  const [mobileSubMenu, setMobileSubMenu] = useState<number | null>(null);
-  const [mobileSubMenuSub, setMobileSubMenuSub] = useState<number | null>(null);
-  const [menuTitle, setMenuTitle] = useState("");
   const { scrollToSection } = useSmoothScroll();
+  const pathname = usePathname();
+  const isHome = pathname === "/";
 
   const handleMenu = () => {
     setMobileMenu(false);
-    setMobileSubMenu(null);
-    setMobileSubMenuSub(null);
   };
 
   const handleMobileNavigation = (sectionId: string) => {
-    scrollToSection(sectionId);
     setMobileMenu(false);
-    setMobileSubMenu(null);
-    setMobileSubMenuSub(null);
-  };
-
-  const handleSubMenu = (e: React.MouseEvent<HTMLElement>, id: number) => {
-    e.preventDefault();
-    setMobileSubMenu(id);
-
-    const target = e.target as HTMLElement;
-    if (target.tagName === "A") {
-      const content = target.firstChild?.textContent || "";
-      setMenuTitle(content);
+    if (isHome) {
+      scrollToSection(sectionId);
     } else {
-      const content = target.parentElement?.textContent || "";
-      setMenuTitle(content);
-    }
-  };
-
-  const handleSubMenuSub = (e: React.MouseEvent<HTMLElement>, id: number) => {
-    e.preventDefault();
-    setMobileSubMenuSub(id);
-    const target = e.target as HTMLElement;
-    if (target.tagName === "A") {
-      const content = target.firstChild?.textContent || "";
-      setMenuTitle(content);
-    } else {
-      const content = target.parentElement?.textContent || "";
-      setMenuTitle(content);
-    }
-  };
-
-  const handleGoBack = () => {
-    if (mobileSubMenuSub) {
-      setMobileSubMenuSub(null);
-      return;
-    }
-    if (mobileSubMenu) {
-      setMobileSubMenu(null);
-      return;
+      window.location.href = `/${sectionId}`;
     }
   };
 
@@ -86,31 +46,15 @@ const Navbar = ({
         } lg:hidden`}
         id="append-menu-header"
       >
-        <div
-          className={`mobile-menu-head transition-all duration-300 ease-in-out ${
-            mobileSubMenu && "active"
-          }`}
-        >
-          <div
-            onClick={handleGoBack}
-            className="go-back transition-all duration-300 ease-in-out hover:scale-110 active:scale-95 cursor-pointer"
-          >
-            <Image
-              className="dropdown-icon transition-transform duration-300 ease-in-out"
-              src="/assets/img_placeholder/icon-black-long-arrow-right.svg"
-              alt="cheveron-right"
-              width={16}
-              height={16}
-            />
-          </div>
+        <div className="mobile-menu-head">
           <div className="current-menu-title transition-all duration-300 ease-in-out">
-            {menuTitle}
+            Menu
           </div>
           <div
             onClick={handleMenu}
             className="mobile-menu-close transition-all duration-300 ease-in-out hover:scale-110 active:scale-95 cursor-pointer"
           >
-            ×
+            &times;
           </div>
         </div>
         <ul className={`site-menu-main ${color} lg:hidden`}>
@@ -131,14 +75,13 @@ const Navbar = ({
             </button>
           </li>
           <li className="nav-item">
-            <button
-              onClick={() =>
-                handleMobileNavigation("#inside-smartnav-ai-labs-section")
-              }
-              className="nav-link-item transition-all duration-300 ease-in-out hover:text-colorOrangyRed hover:translate-x-2 w-full text-left"
+            <Link
+              href="/ai-labs"
+              onClick={handleMenu}
+              className="nav-link-item transition-all duration-300 ease-in-out hover:text-colorOrangyRed hover:translate-x-2 block w-full text-left"
             >
               AI Labs
-            </button>
+            </Link>
           </li>
           <li className="nav-item">
             <button

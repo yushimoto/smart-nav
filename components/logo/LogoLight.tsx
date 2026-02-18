@@ -5,7 +5,7 @@ import logo from "../../public/assets/img_placeholder/logo-light.png";
 const LogoLight = () => {
   return (
     <Link href="/">
-      <Image src={logo} alt="Smart Nav" width="200" height="24" />
+      <Image src={logo} alt="SMARTNAV" width="200" height="24" />
     </Link>
   );
 };

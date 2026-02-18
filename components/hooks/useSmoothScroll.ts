@@ -4,10 +4,10 @@ const useSmoothScroll = () => {
   const scrollToSection = useCallback((sectionId: string) => {
     const element = document.querySelector(sectionId);
     if (element) {
-      const headerHeight = 80; // Approximate header height
+      const headerHeight = 80;
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition =
-        elementPosition + window.pageYOffset - headerHeight;
+        elementPosition + window.scrollY - headerHeight;
 
       window.scrollTo({
         top: offsetPosition,
