@@ -43,23 +43,52 @@ const Navbar = ({
     }
   };
 
-  const linkClass =
-    "text-2xl font-semibold text-white transition-all duration-300 hover:text-colorOrangyRed";
+  // Inline styles to defeat template CSS !important overrides
+  const linkStyle: React.CSSProperties = {
+    color: "#ffffff",
+    fontSize: "1.5rem",
+    fontWeight: 600,
+    background: "none",
+    border: "none",
+    cursor: "pointer",
+    padding: 0,
+    textDecoration: "none",
+  };
 
   return (
     <>
-      {/* Full-screen overlay */}
+      {/* Full-screen overlay — z-index must beat sticky header (9999) */}
       <div
-        className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-black/95 backdrop-blur-md transition-all duration-300 lg:hidden ${
-          mobileMenu
-            ? "opacity-100 visible"
-            : "opacity-0 invisible pointer-events-none"
-        }`}
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 99999,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "rgba(0, 0, 0, 0.97)",
+          backdropFilter: "blur(12px)",
+          transition: "opacity 0.3s ease, visibility 0.3s ease",
+          opacity: mobileMenu ? 1 : 0,
+          visibility: mobileMenu ? "visible" : "hidden",
+          pointerEvents: mobileMenu ? "auto" : "none",
+        }}
+        className="lg:hidden"
       >
         {/* Close button */}
         <button
           onClick={handleClose}
-          className="absolute top-6 right-6 text-white hover:text-colorOrangyRed transition-all duration-300 hover:scale-110 active:scale-95"
+          style={{
+            position: "absolute",
+            top: "1.5rem",
+            right: "1.5rem",
+            color: "#ffffff",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            padding: "0.5rem",
+          }}
           aria-label="Close menu"
         >
           <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -68,40 +97,57 @@ const Navbar = ({
         </button>
 
         {/* Nav links */}
-        <nav className="flex flex-col items-center gap-8">
+        <nav style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "2rem" }}>
           <button
             onClick={() => handleNavigation("#how-it-works")}
-            className={linkClass}
+            style={linkStyle}
           >
             How It Works
           </button>
           <button
             onClick={() => handleNavigation("#missions-section")}
-            className={linkClass}
+            style={linkStyle}
           >
             Applications
           </button>
           <Link
             href="/ai-labs"
             onClick={handleClose}
-            className={linkClass}
+            style={linkStyle}
           >
             AI Labs
           </Link>
           <button
             onClick={() => handleNavigation("#contact-section")}
-            className={linkClass}
+            style={linkStyle}
           >
             Contact Us
           </button>
 
           {/* Divider */}
-          <div className="w-16 h-px bg-gray-700 my-2" />
+          <div style={{ width: "4rem", height: "1px", backgroundColor: "#374151", margin: "0.5rem 0" }} />
 
           {/* Sign In button */}
           <a
             href="https://app.smartnav.ai"
-            className="rounded-full border-2 border-colorOrangyRed px-10 py-3 text-lg font-semibold text-colorOrangyRed transition-all duration-300 hover:bg-colorOrangyRed hover:text-white"
+            style={{
+              color: "#f97316",
+              fontSize: "1.125rem",
+              fontWeight: 600,
+              border: "2px solid #f97316",
+              borderRadius: "9999px",
+              padding: "0.75rem 2.5rem",
+              textDecoration: "none",
+              transition: "all 0.3s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "#f97316";
+              e.currentTarget.style.color = "#ffffff";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "transparent";
+              e.currentTarget.style.color = "#f97316";
+            }}
           >
             Sign In
           </a>
