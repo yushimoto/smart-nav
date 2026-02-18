@@ -148,6 +148,14 @@ const Navbar = ({
               Contact Us
             </button>
           </li>
+          <li className="nav-item mt-4 px-4">
+            <a
+              href="https://app.smartnav.ai"
+              className="block text-center bg-orange-500 hover:bg-orange-600 text-white font-semibold text-[15px] py-3 rounded-lg transition-colors duration-300"
+            >
+              Sign In
+            </a>
+          </li>
         </ul>
       </nav>
     </div>
