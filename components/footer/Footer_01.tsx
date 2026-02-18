@@ -42,31 +42,49 @@ const Footer_01 = () => {
 
     const form = e.currentTarget;
 
+    const GOOGLE_SCRIPT_URL = process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL;
+
+    if (!GOOGLE_SCRIPT_URL) {
+      setToast({
+        message: "Form submission service not configured. Please contact support.",
+        type: "error",
+        isVisible: true,
+      });
+      setIsSubmitting(false);
+      return;
+    }
+
+    const scriptUrl = GOOGLE_SCRIPT_URL.endsWith("/exec")
+      ? GOOGLE_SCRIPT_URL
+      : `${GOOGLE_SCRIPT_URL.replace(/\/$/, "")}/exec`;
+
+    const timestamp = new Date().toLocaleString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZoneName: "short",
+    });
+
     try {
-      const response = await fetch("https://api.smartnav.ai/api/contact", {
+      await fetch(scriptUrl, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, email, message, source: "website" }),
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, message, source: "website-contact", timestamp }),
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.detail || "Failed to send message.");
-      }
-
       setToast({
-        message: data.message || "Message sent successfully! We'll get back to you soon.",
+        message: "Message sent successfully! We'll get back to you soon.",
         type: "success",
         isVisible: true,
       });
       form.reset();
     } catch (error: any) {
       setToast({
-        message:
-          error?.message || "Sorry, there was an error sending your message. Please try again.",
+        message: "Sorry, there was an error sending your message. Please try again.",
         type: "error",
         isVisible: true,
       });
