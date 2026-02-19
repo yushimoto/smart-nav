@@ -29,12 +29,12 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: '/assets/img_placeholder/favicon-light.png',
+        url: '/logos/SN-circle-orange-black_favicon-32.png',
         media: '(prefers-color-scheme: light)',
         type: 'image/png',
       },
       {
-        url: '/assets/img_placeholder/favicon-dark.png',
+        url: '/logos/SN-circle-orange-white_favicon-32.png',
         media: '(prefers-color-scheme: dark)',
         type: 'image/png',
       },

@@ -2,10 +2,10 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import Navbar from '../navbar/Navbar';
 import LogoLight from '../logo/LogoLight';
+import LogoDark from '../logo/LogoDark';
 import useSmoothScroll from '../hooks/useSmoothScroll';
 
 interface HeaderProps {
@@ -59,14 +59,7 @@ const Header_01 = ({ variant = 'dark' }: HeaderProps): React.JSX.Element => {
           {isScrolled || isDark ? (
             <LogoLight />
           ) : (
-            <Link href="/">
-              <Image
-                src="/assets/img_placeholder/logo-dark.png"
-                alt="SMARTNAV"
-                width={200}
-                height={24}
-              />
-            </Link>
+            <LogoDark />
           )}
           <Navbar mobileMenu={mobileMenu} setMobileMenu={setMobileMenu} />
           <div className='flex items-center gap-6'>
