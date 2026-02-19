@@ -42,39 +42,14 @@ const Footer_01 = () => {
 
     const form = e.currentTarget;
 
-    const GOOGLE_SCRIPT_URL = process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL;
-
-    if (!GOOGLE_SCRIPT_URL) {
-      setToast({
-        message: "Form submission service not configured. Please contact support.",
-        type: "error",
-        isVisible: true,
-      });
-      setIsSubmitting(false);
-      return;
-    }
-
-    const scriptUrl = GOOGLE_SCRIPT_URL.endsWith("/exec")
-      ? GOOGLE_SCRIPT_URL
-      : `${GOOGLE_SCRIPT_URL.replace(/\/$/, "")}/exec`;
-
-    const timestamp = new Date().toLocaleString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      timeZoneName: "short",
-    });
-
     try {
-      await fetch(scriptUrl, {
+      const res = await fetch("https://api.smartnav.ai/leads", {
         method: "POST",
-        mode: "no-cors",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, message, source: "website-contact", timestamp }),
+        body: JSON.stringify({ name, email, message, source: "contact" }),
       });
+
+      if (!res.ok) throw new Error("Server error");
 
       setToast({
         message: "Message sent successfully! We'll get back to you soon.",
@@ -88,7 +63,6 @@ const Footer_01 = () => {
         type: "error",
         isVisible: true,
       });
-      form.reset();
     } finally {
       setIsSubmitting(false);
     }
@@ -242,7 +216,7 @@ const Footer_01 = () => {
         <div className="h-[1px] w-full bg-[#DBD6CF]" />
         <div className="py-9 text-center">
           <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-            <p>© {new Date().getFullYear()} Smart Navigation LLC. All Rights Reserved.</p>
+            <p>&copy; {new Date().getFullYear()} Smart Navigation LLC. All Rights Reserved.</p>
             <Link
               href="https://www.linkedin.com/company/smart-navigation"
               target="_blank"

@@ -14,42 +14,16 @@ function AILabs() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const GOOGLE_SCRIPT_URL = process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL;
-    if (!GOOGLE_SCRIPT_URL) {
-      setSubmitted(true);
-      setIsSubmitting(false);
-      return;
-    }
-
-    const scriptUrl = GOOGLE_SCRIPT_URL.endsWith("/exec")
-      ? GOOGLE_SCRIPT_URL
-      : `${GOOGLE_SCRIPT_URL.replace(/\/$/, "")}/exec`;
-
-    const timestamp = new Date().toLocaleString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      timeZoneName: "short",
-    });
-
     try {
-      await fetch(scriptUrl, {
+      const res = await fetch("https://api.smartnav.ai/leads", {
         method: "POST",
-        mode: "no-cors",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: "Developer Waitlist",
-          email,
-          message: "AI Labs developer waitlist signup",
-          source: "ai-labs-waitlist",
-          timestamp,
-        }),
+        body: JSON.stringify({ email, source: "waitlist" }),
       });
+
+      if (!res.ok) throw new Error("Server error");
     } catch (error) {
-      // no-cors means we can't read the response, but data still lands
+      // Still show success — don't block UX for a lead capture failure
     }
 
     setSubmitted(true);
@@ -162,21 +136,20 @@ function AILabs() {
                 >
                   <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-orange-50 text-colorOrangyRed">
                     <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />
                     </svg>
                   </div>
                   <h4 className="mb-3 text-xl font-bold tracking-normal">Behavior Algorithms</h4>
                   <p className="text-gray-600 leading-relaxed">
-                    Perception without action is just data. Write behavior algorithms that
-                    close the loop — Track &amp; Follow, Obstacle Avoidance, Plume Tracing,
-                    Hover &amp; Document, Hotspot Investigation. Your behavior takes sensor
-                    output and translates it into autonomous machine control in real-time.
+                    Write the decision logic that turns perception into action. Your Python code
+                    receives structured detections and sensor state, then issues flight commands —
+                    waypoints, speed, altitude, payload triggers — directly through the autopilot
+                    interface. No middleware.
                   </p>
                   <div className="mt-5 flex flex-wrap gap-2">
                     <span className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700">Python SDK</span>
-                    <span className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700">Autonomy</span>
-                    <span className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700">Control Logic</span>
+                    <span className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700">Direct Control</span>
+                    <span className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700">Event-Driven</span>
                   </div>
                 </div>
 
@@ -188,71 +161,20 @@ function AILabs() {
                 >
                   <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-orange-50 text-colorOrangyRed">
                     <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
                     </svg>
                   </div>
                   <h4 className="mb-3 text-xl font-bold tracking-normal">Mission Packages</h4>
                   <p className="text-gray-600 leading-relaxed">
-                    Bundle a perception model + behavior algorithm + sensor requirements
-                    into a deployable mission package. A &ldquo;Pipeline Inspection Kit&rdquo; might
-                    combine crack detection + hover-and-document behavior + thermal camera
-                    requirement. Operators install the package, the drone knows what to do.
+                    Bundle a perception model + behavior algorithm into a deployable mission
+                    package. Operators select your package from the marketplace and deploy it to
+                    their fleet — perimeter patrol, infrastructure inspection, agricultural
+                    survey, search and rescue.
                   </p>
                   <div className="mt-5 flex flex-wrap gap-2">
-                    <span className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700">Model + Behavior</span>
-                    <span className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700">One-Click Deploy</span>
                     <span className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700">Marketplace</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* The Data Advantage */}
-        <section className="max-w-[1332px] mx-auto">
-          <div className="pb-20 xl:pb-[130px]">
-            <div className="global-container">
-              <div className="jos grid grid-cols-1 items-center gap-12 md:grid-cols-2" data-jos_animation="fade-up">
-                <div>
-                  <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-colorOrangyRed">
-                    The Data Flywheel
-                  </p>
-                  <h2 className="mb-6 font-bold">
-                    Better Data. Better Models. Better Machines.
-                  </h2>
-                  <p className="text-lg leading-[1.5] text-gray-600 lg:text-[21px] mb-6">
-                    Every SMARTNAV-equipped machine generates real-world sensor data during
-                    operations — aerial imagery, environmental readings, telemetry, sensor
-                    streams. This data flows back into a shared, anonymized training dataset
-                    available to all developers on the platform.
-                  </p>
-                  <p className="text-lg leading-[1.5] text-gray-600 lg:text-[21px]">
-                    More machines in the field means richer training data. Richer data means
-                    better models. Better models attract more operators. The flywheel compounds.
-                    Access the dataset through our managed training environment — no raw exports,
-                    full privacy compliance.
-                  </p>
-                </div>
-                <div className="rounded-[20px] border border-gray-200 p-8 lg:p-10">
-                  <div className="space-y-6">
-                    {[
-                      { step: "Collect", desc: "Drones generate labeled sensor data during real missions" },
-                      { step: "Aggregate", desc: "Anonymized data pools into shared training datasets" },
-                      { step: "Train", desc: "Developers build better models with real-world aerial data" },
-                      { step: "Deploy", desc: "Better models attract more operators to the fleet" },
-                      { step: "Repeat", desc: "More operators generate more data — the cycle accelerates" },
-                    ].map((item, i) => (
-                      <div key={i} className="flex items-start gap-4">
-                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-colorOrangyRed text-sm font-bold text-white">
-                          {i + 1}
-                        </div>
-                        <div>
-                          <p className="font-bold text-black">{item.step}</p>
-                          <p className="text-sm text-gray-500">{item.desc}</p>
-                        </div>
-                      </div>
-                    ))}
+                    <span className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700">Fleet Deploy</span>
+                    <span className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700">Revenue Share</span>
                   </div>
                 </div>
               </div>
